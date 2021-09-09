@@ -1,3 +1,11 @@
+/* insert.c - To insert a row into a table without using SQL.
+By: Pedro Izecksohn , izecksohn@yahoo.com
+Version: 2021/September/09 04:49
+Copyright: This program is free and open source.
+           You may modify and distribute copies of this if you grant the user the right to receive this source code.
+           For details, see GPL 3.
+*/
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,7 +48,11 @@ char *row_append (char * const row, const char c)
   size_t delta = 1;
   if ((c=='"')||(c=='\\')) delta = 2;
   const size_t curlen = strlen (row);
-  if ((curlen-15+delta)>=ROWMAXLEN) exit (EXIT_FAILURE); // The -15 is for the initial date_time and double-quotes.
+  if ((curlen-15+delta)>=ROWMAXLEN)  // The -15 is for the initial date_time and double-quotes.
+  {
+    printf ("Content-type: text/html\n\n<html lang=\"en\"><head><meta charset=\"ASCII\"></head><body><center>Your entry is too big. You should write a shorter message.</center></body></html>\n");
+    exit (EXIT_SUCCESS);
+  }
   char *ret = realloc (row, (curlen+1+delta));
   if (!ret) exit (EXIT_FAILURE);
   if (2==delta)
